@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8" />
+    <title>Hello React</title>
+    <script src="https://unpkg.com/react@16/umd/react.development.js"></script>
+    <script src="https://unpkg.com/react-dom@16/umd/react-dom.development.js"></script>
+
+    <!-- babel => compilation du JSX -->
+    <script src="https://unpkg.com/babel-standalone@6.15.0/babel.min.js"></script>
+    <style>
+        .heading{
+            color: purple;
+        }
+    </style>
+</head>
+<body>
+    <div id="root"></div>
+    <script type="text/babel">
+
+        class Form extends React.Component {
+            constructor(props) {
+                super(props);
+                this.state = { 
+                    total : null,
+                    number : "",
+                    base : "",
+                    message : ""
+                };
+            
+                this.handleChange = this.handleChange.bind(this);
+                this.handleSubmit = this.handleSubmit.bind(this);
+            }
+            
+            handleChange(event) {
+                const { value, name } = event.target;
+                if(Number.isInteger(parseInt(value, 10))) {
+                    this.setState({ 
+                        [name] : value
+                    });
+                }
+            }
+        
+            handleSubmit(event) {
+                event.preventDefault();
+                if(this.state.number.trim() == "" || this.state.base.trim() == "") {
+                    this.setState({
+                        message : "J'ai besoin des valeurs des 2 inputs."
+                    });
+                    return;
+                }
+
+                this.setState({
+                    total : this.state.number * this.state.base,
+                    message : ""
+                });
+            }
+            
+            render() {
+                return (
+                    <React.Fragment>
+                        { this.state.message != null ? <p>{this.state.message}</p> : null}
+
+                        <form onSubmit={this.handleSubmit}>
+                            <div>
+                                <label>Saisir un nombre : </label>
+                                <input type="text" name="number" value={this.state.number} onChange={this.handleChange}/>
+                            </div>
+                            <div>
+                                <label>Choisir un nombre : </label>
+                                <select name="base" value={this.state.base} onChange={this.handleChange}>
+                                    <option></option>
+                                    <option value="0">Aucune</option>
+                                    <option value="2">2</option>
+                                    <option value="3">3</option>
+                                    <option value="7">7</option>
+                                </select>
+                            </div>
+                            
+                            <button type="submit" className="btn btn-primary">Calculer</button>
+                        </form>
+
+                        { this.state.total != null ? <p>{this.state.total}</p> : null}
+                    </React.Fragment>
+                );
+            }
+        }
+          
+        ReactDOM.render(
+            <Form />, 
+            document.getElementById('root')
+        )
+    </script>
+</body>
+</html>

@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8" />
+    <title>Hello React</title>
+    <script src="https://unpkg.com/react@16/umd/react.development.js"></script>
+    <script src="https://unpkg.com/react-dom@16/umd/react-dom.development.js"></script>
+
+    <!-- babel => compilation du JSX -->
+    <script src="https://unpkg.com/babel-standalone@6.15.0/babel.min.js"></script>
+    <style>
+        .heading{
+            color: purple;
+        }
+    </style>
+</head>
+<body>
+    <div id="root"></div>
+    <script type="text/babel">
+
+        class App extends React.Component {
+            constructor(props) {
+                super(props);
+                this.state = {
+                    price : 100,
+                    percentage : 1,
+                    total : 0
+                }
+            }
+
+            componentDidMount(){
+                // 30 % d'augmentation
+                this.setState((state, props) => ({percentage : 0.2}));
+                this.setState((state, props) => ({percentage : state.percentage + 0.05 }));
+                this.setState((state, props) => ({percentage : state.percentage + 0.05 }));
+            }
+
+            render(){
+                return (
+                    <React.Fragment>
+                        <p>Tax : {this.state.percentage} </p>
+                        {/* Augmentation du prix */}
+                        <Price percentage={this.state.percentage} price={this.state.price} />
+                    </React.Fragment>
+                );
+            }
+        }
+
+        class Price extends React.Component {
+            constructor(props) {
+                super(props);
+                this.state = {
+                    total : 0
+                }
+            }
+
+            componentDidMount(){
+
+                /*this.setState({ total : 100 * this.props.percentage  });
+                this.setState({ total : (this.state.total + 200) * this.props.percentage  });
+                this.setState({ total : (this.state.total + 50) * this.props.percentage  });*/
+
+                // On calcule le total TTC en fonction des 30 %
+                this.setState((state, props) => ({ total :  props.price * ( props.percentage + 1 )  }));
+                // on applique encore une augmentation de 30 % sur le nouveau total
+                this.setState((state, props) => ({ total : (state.total + 200) * ( props.percentage + 1 )  }));
+
+                // on applique encore une augmentation de 30 % sur le nouveau total
+                this.setState((state, props) => ({ total : (state.total + 50) * ( props.percentage + 1 )  }));
+            
+            }
+
+            render() {
+                return (
+                    <div>
+                        Total : {this.state.total}
+                    </div>
+                )
+            }
+        }
+          
+        ReactDOM.render(
+            <App />, 
+            document.getElementById('root')
+        )
+    </script>
+</body>
+</html>

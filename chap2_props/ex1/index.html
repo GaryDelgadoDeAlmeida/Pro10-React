@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8" />
+    <title>Hello React</title>
+    <script src="https://unpkg.com/react@16/umd/react.development.js"></script>
+    <script src="https://unpkg.com/react-dom@16/umd/react-dom.development.js"></script>
+
+    <!-- babel => compilation du JSX -->
+    <script src="https://unpkg.com/babel-standalone@6.15.0/babel.min.js"></script>
+    <style>
+        .heading{
+            color: purple;
+        }
+    </style>
+</head>
+<body>
+    <div id="root"></div>
+    <script type="text/babel">
+        // Création de composant en créant des classes
+        class App extends React.Component {
+
+            render() {
+                const MESSAGES = [
+                    { message : "React JS" },
+                    { message : "React Native" },
+                    { message : "Angular" },
+                    { message : "Symfony" },
+                    { message : "MongoDB" },
+                ];
+
+                return(
+                    <div>
+                        <Messages messages={MESSAGES}/>
+                    </div>
+                );
+            }
+        }
+
+        class Messages extends React.Component {
+
+            render() {
+                return(
+                    <div>
+                        <ul>
+                            {this.props.messages.map((message, i) => (
+                                <Message key={i} message={message.message}/>
+                            ))} 
+                        </ul>
+                    </div>
+                );
+            }
+        }
+
+        class Message extends React.Component {
+
+            render() {
+                return(
+                    <div>
+                        <li>{this.props.message}</li>
+                    </div>
+                );
+            }
+        }
+
+        // Rendu dans le DOM
+        ReactDOM.render(
+            <App subtitle="Enjoy ! " />,
+            document.getElementById('root')
+        );
+    </script>
+</body>
+</html>

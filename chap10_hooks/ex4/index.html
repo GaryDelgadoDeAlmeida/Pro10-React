@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8" />
+    <title>Hello React</title>
+    <script src="https://unpkg.com/react@16/umd/react.development.js"></script>
+    <script src="https://unpkg.com/react-dom@16/umd/react-dom.development.js"></script>
+
+    <!-- babel => compilation du JSX -->
+    <script src="https://unpkg.com/babel-standalone@6.15.0/babel.min.js"></script>
+    <style>
+        .heading{
+            color: purple;
+        }
+    </style>
+</head>
+<body>
+    <div id="root"></div>
+    <script type="text/babel">
+
+        const initialState = { result : 0, number1 : '', number2 : '' };
+        const reducer = (state, action) => {
+            console.log(state, action)
+            switch (action.type) {
+                case 'INCREMENT_ADD':
+                    return {
+                        ...state,
+                        result: parseInt(action.number1, 10) + parseInt(action.number2, 10),
+                        number1: action.number1,
+                        number2: action.number2
+                    };
+                
+                case 'INCREMENT_MULTI':
+                    return {
+                        ...state,
+                        result: parseInt(action.number1, 10) * parseInt(action.number2, 10),
+                        number1: action.number1,
+                        number2: action.number2
+                    };
+                
+                default:
+                    return state;
+            }
+        }
+
+        const App = (props) => {
+            const [state, dispatch] = React.useReducer(reducer, initialState);
+            const [number1, setNumber1] = React.useState('');
+            const [number2, setNumber2] = React.useState('');
+
+            function handleChange(event) {
+                if(parseInt(event.target.value, 10) != event.target.value) {
+                    return;
+                }
+
+                if(event.target.name == "number1") {
+                    setNumber1(parseInt(event.target.value, 10));
+                } else {
+                    setNumber2(parseInt(event.target.value, 10));
+                }
+            }
+
+            return (
+                <React.Fragment>
+                    <div>
+                        <div>
+                            <label htmlFor="number1">Number 1 :</label>
+                            <input type="text" name="number1" value={number1} onChange={handleChange} required/>
+                        </div>
+                        
+                        <div>
+                            <label htmlFor="number2">Number 2 :</label>
+                            <input type="text" name="number2" value={number2} onChange={handleChange} required/>
+                        </div>
+
+                        <div>
+                            <button onClick={() => dispatch({type: 'INCREMENT_ADD', number1: number1, number2: number2})}>+</button>
+                            <button onClick={() => dispatch({type: 'INCREMENT_MULTI', number1: number1, number2: number2})}>x</button>
+                        </div>
+                    </div>
+
+                    <p>{state.result}</p>
+                </React.Fragment>
+            )
+        }
+          
+        ReactDOM.render(
+            <App />, 
+            document.getElementById('root')
+        )
+    </script>
+</body>
+</html>

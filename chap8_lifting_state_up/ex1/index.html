@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8" />
+    <title>Hello React</title>
+    <script src="https://unpkg.com/react@16/umd/react.development.js"></script>
+    <script src="https://unpkg.com/react-dom@16/umd/react-dom.development.js"></script>
+
+    <!-- babel => compilation du JSX -->
+    <script src="https://unpkg.com/babel-standalone@6.15.0/babel.min.js"></script>
+    <style>
+        .heading{
+            color: purple;
+        }
+    </style>
+</head>
+<body>
+    <div id="root"></div>
+    <script type="text/babel">
+
+        class App extends React.Component {
+            constructor(props) {
+                super(props)
+                this.state = {
+                    binary : "",
+                    decimal : ""
+                }
+
+                this.onChangeBase = this.onChangeBase.bind(this);
+            }
+
+            onChangeBase(value, base) {
+                console.log(value, base)
+                if(value.trim() == "") {
+                    return;
+                }
+
+                if(base == 2) {
+                    this.setState({
+                        binary : parseInt(value, base).toString(2)
+                    })
+                } else {
+                    this.setState({
+                        decimal : parseInt(value, base).toString(10)
+                    })
+                }
+            }
+
+            render() {
+                const binary = this.state.binary;
+                const decimal = this.state.decimal;
+
+                return (
+                    <BaseNumberInput binary={binary} decimal={decimal} onChange={(value, base) => this.onChangeBase(value, base)}/>
+                )
+            }
+        }
+
+        class BaseNumberInput extends React.Component {
+            constructor(props) {
+                super(props)
+                this.state = {
+                    decimalNum : "",
+                    binaryNum : ""
+                }
+
+                this.handleChange = this.handleChange.bind(this);
+            }
+
+            handleChange(event) {
+                const { value, name } = event.target;
+                this.setState({
+                    [name] : value
+                })
+                
+                if(name == "decimalNum") {
+                    this.props.onChange(value, 2);
+                } else {
+                    this.props.onChange(value, 10);
+                }
+            }
+
+            render() {
+                const binary = this.props.binary;
+                const decimal = this.props.decimal;
+
+                return (
+                    <div>
+                        <label>Saisir un décimal : </label>
+                        <input type="text" name="decimalNum" value={this.decimalNum} onChange={this.handleChange} />
+
+                        <label>Saisir un binaire : </label>
+                        <input type="text" name="binaryNum" value={this.binaryNum} onChange={this.handleChange} />
+
+                        <p>Converssion binaire : {binary}</p>
+
+                        <p>Converssion décimal : {decimal}</p>
+                    </div>
+                )
+            }
+        }
+          
+        ReactDOM.render(
+            <App />, 
+            document.getElementById('root')
+        )
+    </script>
+</body>
+</html>

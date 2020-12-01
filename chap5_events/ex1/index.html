@@ -1,0 +1,134 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8" />
+    <title>Hello React</title>
+    <script src="https://unpkg.com/react@16/umd/react.development.js"></script>
+    <script src="https://unpkg.com/react-dom@16/umd/react-dom.development.js"></script>
+
+    <!-- babel => compilation du JSX -->
+    <script src="https://unpkg.com/babel-standalone@6.15.0/babel.min.js"></script>
+    <style>
+        .heading{
+            color: purple;
+        }
+    </style>
+</head>
+<body>
+    <div id="root"></div>
+    <script type="text/babel">
+        class CompteurOne extends React.Component{
+            constructor(props){
+                super(props);
+                this.state = {
+                    compteur : 1,
+                }
+                this.startAddOne = this.startAddOne.bind(this);
+                this.stopAddOne = this.stopAddOne.bind(this);
+                this.resetAddOne = this.resetAddOne.bind(this);
+                this.stopAddOne = this.stopAddOne.bind(this);
+                this.interval = null;
+            }
+          
+            startAddOne(){
+                // Pas bonne pratique
+                // document.getElementById("stopButton").toggleAttribute("disabled")
+                this.interval = setInterval(() => {
+                    if(this.state.compteur < 20) {
+                        this.setState({
+                            compteur : this.state.compteur + 1
+                        })
+                    } else {
+                        clearInterval(this.interval)
+                    }
+                }, 1000)
+            }
+
+            stopAddOne(){
+                // Pas bonne pratique
+                // document.getElementById("startButton").toggleAttribute("disabled")
+                clearInterval(this.interval)
+            }
+
+            resetAddOne(){
+                clearInterval(this.interval)
+                this.setState({compteur : 1})
+            }
+          
+            render(){
+                return (
+                    <div>
+                        <button id="startButton" onClick={this.startAddOne}>Start (+1)</button>
+                        <button id="stopButton" onClick={this.stopAddOne}>Stop</button>
+                        <button onClick={this.resetAddOne}>Reset</button>
+                        <p>{this.state.compteur}</p>
+                    </div>
+                )
+            }
+        }
+
+        class CompteurTwo extends React.Component {
+            constructor(props) {
+                super(props);
+                this.state = {
+                    compteur : 1
+                }
+                this.startAddTwo = this.startAddTwo.bind(this);
+                this.stopAddTwo = this.stopAddTwo.bind(this);
+                this.resetAddTwo = this.resetAddTwo.bind(this);
+            }
+
+            startAddTwo() {
+                document.getElementById("stopButton").toggleAttribute("disabled")
+                const interval = setInterval(() => {
+                    if(this.state.compteur < 20)
+                        this.setState({
+                            compteur : this.state.compteur + 2
+                        })
+                    else
+                        clearInterval(interval)
+                }, 1000)
+            }
+
+            stopAddTwo() {
+                console.log(this.state);
+            }
+
+            resetAddTwo() {
+                this.setState({compteur : 1})
+            }
+
+            render(){
+                return (
+                    <div>
+                        <button id="startButton" onClick={this.startAddTwo}>Start (+2)</button>
+                        <button id="stopButton" onClick={this.stopAddTwo} disabled>Stop</button>
+                        <button onClick={this.resetAddTwo}>Reset</button>
+                        <p>{this.state.compteur}</p>
+                    </div>
+                )
+            }
+        }
+
+        class App extends React.Component {
+            render() {
+                return (
+                    <div>
+                        <div>
+                            <CompteurOne />
+                        </div>
+                        <div>
+                            <CompteurTwo />
+                        </div>
+                    </div>
+                )
+            }
+        }
+          
+        ReactDOM.render(
+            <App />, 
+            document.getElementById('root')
+        )
+    </script>
+</body>
+</html>
