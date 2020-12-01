@@ -21,19 +21,33 @@
         const initialState = { result : 0, number1 : '', number2 : '', message: '' };
         const reducer = (state, action) => {
             switch (action.type) {
-                case 'INCREMENT_ADD':
+                case 'ADDITION':
                     return {
                         ...state,
                         result: parseInt(state.number1, 10) + parseInt(state.number2, 10),
                         message: ""
                     };
                 
-                case 'INCREMENT_MULTI':
+                case 'MULTIPLICATION':
                     return {
                         ...state,
                         result: parseInt(state.number1, 10) * parseInt(state.number2, 10),
                         message: ""
                     };
+
+                case 'DIVISION':
+                    if(parseInt(state.number1, 10) === 0 || parseInt(state.number2, 10) === 0) {
+                        return {
+                            ...state,
+                            message: "La division par 0 est impossible"
+                        }
+                    }
+
+                    return {
+                        ...state,
+                        result: parseInt(state.number1, 10) / parseInt(state.number2, 10),
+                        message: ""
+                    }
 
                 case 'ONCHANGE':
                     if(action.value !== "" && (parseInt(action.value, 10) != action.value)) {
@@ -81,8 +95,9 @@
                         </div>
 
                         <div>
-                            <button onClick={() => dispatch({type: 'INCREMENT_ADD'})}>+</button>
-                            <button onClick={() => dispatch({type: 'INCREMENT_MULTI'})}>x</button>
+                            <button onClick={() => dispatch({type: 'ADDITION'})}>+</button>
+                            <button onClick={() => dispatch({type: 'MULTIPLICATION'})}>x</button>
+                            <button onClick={() => dispatch({type: 'DIVISION'})}>/</button>
                         </div>
 
                         <div>
