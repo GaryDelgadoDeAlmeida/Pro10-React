@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8" />
+    <title>Hello React</title>
+    <script src="https://unpkg.com/react@16/umd/react.development.js"></script>
+    <script src="https://unpkg.com/react-dom@16/umd/react-dom.development.js"></script>
+
+    <!-- babel => compilation du JSX -->
+    <script src="https://unpkg.com/babel-standalone@6.15.0/babel.min.js"></script>
+    <style>
+        .heading{
+            color: purple;
+        }
+    </style>
+</head>
+<body>
+    <div id="root"></div>
+    <script type="text/babel">
+
+        const NumberContext = React.createContext([]);
+        const NumberProvider = ({ children }) => {
+            const [state, dispatch] = React.useReducer(reducer, initialState);
+
+            return (
+                <PostContext.Provider value={[state, dispatch]}>
+                    {children}
+                </PostContext.Provider>
+            )
+        }
+
+        const initialState = {
+            numbers: [],
+            number: '',
+            message: "",
+        }
+
+        const reducer = (state, action) =>{
+            switch(action.type){
+                case "ON_CHANGE":
+                    if(action.value != "") {
+                        //
+                    }
+
+                    return {
+                        ...state,
+                        [action.name] : action.value
+                    }
+
+                case 'ADD_NUMBER':
+                    return {
+                        ...state,
+                        numbers : state.numbers.concat(action.number),
+                        number : action.number
+                    }
+
+                default:
+                    return state;
+            }
+
+        }
+
+        const App = () => {
+            return (
+                <Container>
+                    <h1>Hello</h1>
+
+                    <Numbers />
+                </Container>
+            )
+        }
+
+        const Container = ({children}) => {
+            return (
+                <div>
+                    {children}
+                </div>
+            )
+        }
+
+        const Numbers = () => {
+            const [state, dispatch] = React.useContext(NumberContext);
+
+            function handleChange(e) {
+                dispatch({type: "ON_CHANGE", name: e.target.name, value: e.target.value.trim()})
+            }
+
+            return (
+                <React.Fragment>
+                    <label>Ajouter un nombre :</label>
+                    <input type="text" name="number" value={state.number} onChange={handleChange} />
+                    <button onClick={() => dispatch({type : 'ADD_NUMBER' , number : Math.random() }) }>Add number</button>
+
+                    {state.numbers.lenght > 0 && (
+                        <ul>
+                            {state.numbers.map((num) => <li>{num}</li>)}
+                        </ul>
+                    )}
+                </React.Fragment>
+            )
+        }
+          
+        ReactDOM.render(
+            <App />, 
+            document.getElementById('root')
+        )
+    </script>
+</body>
+</html>
